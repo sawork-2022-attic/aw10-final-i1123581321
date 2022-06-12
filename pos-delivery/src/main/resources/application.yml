@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: delivery-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      username: root
+      password: example
+      database: posdb
+      authentication-database: admin
+  cloud:
+    stream:
+      function:
+        bindings:
+          generateWaybill-in-0: waybill
+      bindings:
+        waybill:
+          destination: order
+    function:
+      definition: generateWaybill
+server:
+  port: 0
+  forward-headers-strategy: framework
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

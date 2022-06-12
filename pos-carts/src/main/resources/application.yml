@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: cart-service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      username: root
+      password: example
+      database: posdb
+      authentication-database: admin
+server:
+  port: 0
+  forward-headers-strategy: framework
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.int}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

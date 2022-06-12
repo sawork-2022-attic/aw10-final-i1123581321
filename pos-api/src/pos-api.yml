@@ -1,0 +1,293 @@
+openapi: "3.0.3"
+info:
+  version: 0.0.1
+  title: ReactivePos
+  license:
+    name: MIT
+paths:
+  /products:
+    get:
+      summary: List all products
+      operationId: listProducts
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: page number
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: product name
+      responses:
+        '200':
+          description: A paged array of products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Products"
+  /products/{productId}:
+    get:
+      summary: Info for a specific product
+      operationId: showProductById
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          description: The id of the product to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+  /carts:
+    get:
+      summary: List all carts
+      operationId: listCarts
+      responses:
+        '200':
+          description: An array of carts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Carts"
+    post:
+      operationId: createCart
+      summary: Create a new cart
+      requestBody:
+        description: An empty cart
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+        required: true
+      responses:
+        201:
+          description: The cart was successfully added.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+  /carts/{cartId}:
+    get:
+      summary: Info for a specific cart
+      operationId: showCartById
+      parameters:
+        - in: path
+          name: cartId
+          required: true
+          description: The id of the cart to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+    post:
+      summary: Add an item to cart
+      operationId: addItemToCart
+      parameters:
+        - in: path
+          name: cartId
+          required: true
+          description: The id of the cart to retrieve
+          schema:
+            type: string
+      requestBody:
+        description: The details of the item.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartItem'
+        required: true
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cart"
+  /carts/{cartId}/total:
+    get:
+      summary: Total for a specific cart
+      operationId: showCartTotal
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: The id of the cart to get total
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+  /orders:
+    get:
+      summary: List all orders
+      operationId: listOrders
+      responses:
+        200:
+          description: array of orders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Orders"
+    post:
+      summary: Create a order
+      operationId: createOrder
+      requestBody:
+        description: a cart
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cart"
+        required: true
+      responses:
+        201:
+          description: The order was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+  /orders/{orderId}:
+    get:
+      summary: info for a specific order
+      operationId: showOrderById
+      parameters:
+        - in: path
+          name: orderId
+          required: true
+          description: The id of the order to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+  /waybills:
+    get:
+      summary: List all waybills
+      operationId: listWaybills
+      parameters:
+        - in: query
+          name: orderId
+          schema:
+            type: string
+          description: order id
+      responses:
+        200:
+          description: array of waybills
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Waybills"
+  /waybills/{waybillId}:
+    get:
+      summary: info for a specific waybill
+      operationId: showWaybillById
+      parameters:
+        - in: path
+          name: waybillId
+          required: true
+          description: The id of the waybill to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Waybill"
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        image:
+          type: string
+    Products:
+      type: array
+      items:
+        $ref: "#/components/schemas/Product"
+    CartItem:
+      type: object
+      properties:
+        amount:
+          type: integer
+          format: int32
+        product:
+          $ref: "#/components/schema/Product"
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: "#/components/schema/CartItem"
+    Carts:
+      type: array
+      items:
+        $ref: "#/components/schema/Cart"
+    Order:
+      type: object
+      properties:
+        id:
+          type: string
+        total:
+          type: number
+          format: double
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+    Orders:
+      type: array
+      items:
+        $ref: "#/components/schemas/Order"
+    Waybill:
+      type: object
+      properties:
+        id:
+          type: string
+        order_id:
+          type: string
+        state:
+          type: string
+          enum:
+            - created
+            - delivering
+            - delivered
+    Waybills:
+      type: array
+      items:
+        $ref: "#/components/schemas/Waybill"
