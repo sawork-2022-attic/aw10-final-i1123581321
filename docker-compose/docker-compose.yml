@@ -4,6 +4,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.9-management
     container_name: rabbitmq
+    restart: always
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -18,8 +19,6 @@ services:
       MONGO_INITDB_DATABASE: posdb
     ports:
       - "27017:27017"
-    volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
 
   mongo-express:
     image: mongo-express:latest
