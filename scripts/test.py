@@ -108,18 +108,18 @@ if __name__ == '__main__':
     order = response.json()
 
     pprint.pprint(order)
-
-    input("Press any key to continue...")
-
-    print("Testcase 7: check waybill")
-
-    # check waybill
-    response = requests.get("http://localhost:8080/waybills/api/waybills")
-
-    assert response.status_code == 200, f"{response.content}"
-
-    waybills = response.json()
-
-    pprint.pprint(waybills)
-
-    assert any(waybill['order_id'] == order['id'] for waybill in waybills), waybills
+#
+#     input("Press any key to continue...")
+#
+#     print("Testcase 7: check waybill")
+#
+#     # check waybill
+#     response = requests.get("http://localhost:8080/waybills/api/waybills")
+#
+#     assert response.status_code == 200, f"{response.content}"
+#
+#     waybills = response.json()
+#
+#     pprint.pprint(waybills)
+#
+#     assert any(waybill['order_id'] == order['id'] for waybill in waybills), waybills

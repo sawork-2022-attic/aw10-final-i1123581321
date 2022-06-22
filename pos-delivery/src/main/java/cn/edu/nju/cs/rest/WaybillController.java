@@ -6,16 +6,25 @@ import cn.edu.nju.cs.dto.WaybillDto;
 import cn.edu.nju.cs.mapper.WaybillMapper;
 import cn.edu.nju.cs.model.Waybill;
 import cn.edu.nju.cs.repository.WaybillRepository;
+import cn.edu.nju.cs.service.MessageListener;
+import cn.edu.nju.cs.service.MessagePublisher;
+import cn.edu.nju.cs.service.WaybillInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 
 @RestController
@@ -27,7 +36,7 @@ public class WaybillController implements WaybillsApi {
     private final WaybillRepository waybillRepository;
 
     @Autowired
-    public WaybillController(WaybillMapper waybillMapper, WaybillRepository waybillRepository) {
+    public WaybillController(WaybillMapper waybillMapper, WaybillRepository waybillRepository, MessagePublisher publisher) {
         this.waybillMapper = waybillMapper;
         this.waybillRepository = waybillRepository;
     }
@@ -50,10 +59,5 @@ public class WaybillController implements WaybillsApi {
                 .map(waybillMapper::toWaybillDto)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
-    @Bean
-    public Consumer<OrderDto> generateWaybill(){
-        return d -> waybillRepository.save(new Waybill(d.getId())).subscribe();
     }
 }

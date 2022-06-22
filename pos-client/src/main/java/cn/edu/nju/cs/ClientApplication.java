@@ -1,4 +1,4 @@
-package com.example;
+package cn.edu.nju.cs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,4 +15,6 @@ public class ClientApplication {
     public WebClient client(){
         return WebClient.create("http://localhost:8080");
     }
+
+
 }

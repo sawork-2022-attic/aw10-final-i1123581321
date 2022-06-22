@@ -2,9 +2,9 @@ package cn.edu.nju.cs.batch;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.lang.NonNull;
 
 import java.util.regex.Pattern;
-import java.util.zip.DeflaterOutputStream;
 
 public class ProductProcessor implements ItemProcessor<JsonNode, Product> {
 
@@ -15,10 +15,7 @@ public class ProductProcessor implements ItemProcessor<JsonNode, Product> {
     }
 
     @Override
-    public Product process(JsonNode jsonNode) throws Exception {
-        if (jsonNode == null){
-            return null;
-        }
+    public Product process(@NonNull JsonNode jsonNode) throws Exception {
         var name = jsonNode.get("title").asText();
 
         var image = jsonNode.get("imageURLHighRes");
@@ -28,12 +25,12 @@ public class ProductProcessor implements ItemProcessor<JsonNode, Product> {
             imageUrl = image.get(0).asText();
         }
 
-        double price = 0;
         var priceString = jsonNode.get("price").asText();
         var match = pattern.matcher(priceString);
         if (match.find()){
-            price = Double.parseDouble(match.group(1));
+            var price = Double.parseDouble(match.group(1));
+            return new Product(name, price, imageUrl);
         }
-        return new Product(name, price, imageUrl);
+        return null;
     }
 }

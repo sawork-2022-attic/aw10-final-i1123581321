@@ -16,7 +16,6 @@
         <module>pos-gateway</module>
         <module>pos-order</module>
         <module>pos-delivery</module>
-        <module>pos-datasource</module>
     </modules>
 
     <properties>

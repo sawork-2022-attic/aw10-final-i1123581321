@@ -46,7 +46,7 @@ public class OrderController implements OrdersApi {
                 .map(o -> {
                     var orderDto = orderMapper.toOrderDto(o);
                     streamBridge.send("order", orderDto);
-                    System.out.println("send order to rabbitmq");
+//                    System.out.println("send order to rabbitmq");
                     return orderDto;
                 })
                 .map(ResponseEntity::ok)
